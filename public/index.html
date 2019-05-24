@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+    body { 
+      margin: 15px; font-family: sans-serif }
+    h3 {
+      padding: 0; margin: 0; margin-bottom: 1rem;}
+    #chat { 
+      background: rgb(245, 245, 245); height: 200px; width: calc(100% - 20px); 
+      max-width:620px; border: 1px solid gray; margin-bottom: 10px; 
+      padding: 10px; overflow-y: auto; overflow-y: scroll;}
+    #controls { 
+      display: grid; width: calc(100%); max-width:642px; 
+      grid-template-columns: 25% 55% 20%; }
+    #controls input { 
+      padding: 8px 5px; }
+    </style>
+  </head>
+  <body>
+    <div id="chat"></div>
+      <form autocomplete="off">
+        <div id="controls">
+          <input type="text" id="username" placeholder="Usuario" />
+          <input type="text" id="content" placeholder="Mensaje" />
+          <input type="submit" value="Enviar" />
+        </div>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> 
+    <script src="/socket.io/socket.io.js"></script> 
+    <script>
+    // Aquí irá el código JavaScript del cliente
+    var socket = io()
+
+    // Cuando jQuery se haya cargado
+    $(function() {    
+      
+      // Capturamos el clic en el botón de enviar
+      var form = $("form").on("submit", function(e){
+        // Desactivamos el formulario para enviarlo con JS
+        e.preventDefault() 
+        // Creamos un objeto con el mensaje
+        var message = {
+          name: $("#username").val().trim(), 
+          content: $("#content").val().trim()
+        }
+        // Lo emitimos al servidor si cumple las condiciones
+        if (message.name.length > 0 && message.content.length > 0) {
+          socket.emit("nuevo_mensaje", message) // Lo emitimos
+          $("#username").attr("disabled","disabled") // Desactivamos el nombre
+          $("#content").val("").focus() // Borramos el mensaje y lo seleccionamos
+        }
+      })
+
+      // Capturamos la señal de bienvenida y saludamos al usuario
+      socket.on("bienvenida", function() {
+        $("#chat")
+          .empty()
+          .append("<h3>Bienvenido al chat de Hektor Profe</h3>")
+      })
+      
+      // Recuperamos el mensaje y lo añadimos al HTML
+      socket.on('difundir_mensaje', function(message) {
+        $("#chat")
+          .append(`
+            <b>${special(message.name)}</b>
+            ${special(message.content)}<br>`)
+        // Hacemos scroll a la parte inferior del chat
+        $("#chat").scrollTop($("#chat").height())
+      })
+
+    })
+
+    // Función para prevenir inyección de tags
+    function special(str){ 
+      // gi => Reemplazo global case-insensitive
+      str = str.replace(/</gi, '&lt;')
+      str = str.replace(/>/gi, '&gt;') 
+      return str
+    }
+    </script>
+  </body>
+</html>
