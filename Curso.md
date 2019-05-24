@@ -431,12 +431,12 @@ En este caso en particular indagando encontraremos esta línea:
 Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch
 ```
 
-Básicamente nos dice que falló la asignación al puerto 3000, os recomiendo usar el puerto 5000, ese a mi me suele funcionar:
+Básicamente nos dice que falló la asignación al puerto 3000, ¿sabéis poqué? Cuando hemos definido el **Procfile** hemos indicado que el servicio tiene el tipo web, eso le dice a Heroku que este proceso debe ejecutarse en el puerto 80.
 
 Vamos a cambiar la línea para usar el puerto que maneja el proceso de Heroku internamente:
 
 ```javascript
-var server = http.listen(5000, () => {
+var server = http.listen(80, () => {
   console.log("Servidor listo en http://127.0.0.1:5000");
 });
 ```
