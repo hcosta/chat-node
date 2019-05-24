@@ -352,23 +352,7 @@ Una vez creada instalamos el cliente de Heroku en Node, es muy fácil pero tarda
 npm install -g heroku
 ```
 
-Cuando lo tengamos escribiremos en la terminal:
-
-```bash
-heroku login
-```
-
-Os pedirá abrir el navegador para identificaros en la web.
-
-Una vez identificados, estando en nuestro proyecto de Node ejecutamos el comando:
-
-```bash
-heroku create
-```
-
-Así abremos creado un nuevo proyecto en una URL aleatoria de Heroku.
-
-Ahora, para desplegar un proyecto en Heroku es necesario hacer algunas preparaciones.
+Ahora, antes de desplegar un proyecto en Heroku es necesario hacer algunas preparaciones.
 
 La primera es crear un fichero llamado **Procfile**, éste contendrá el tipo de proceso que deseamos iniciar y el comando que iniciará el servicio:
 
@@ -380,24 +364,38 @@ web: node server.js
 
 El siguiente requisito es que el proyecto esté gestionado con el control de versiones Git, así que no tenemos remedio que instalar ese programa, os dejaré el ![enlace en los apuntes](https://git-scm.com/downloads). Podéis hacer siguiente, siguiente, siguiente sin mucha complicación.
 
-Una vez tengáis Git instalado y hayáis reiniciado Visual Studio Code podréis manejar Git desde el propio editor, sin embargo antes debemos configurar un email y un nombre de usuario en Git, eso lo podemos haciendo clic derecho en la carpeta de nuestro proyecto y "Git Bash Here".
+Una vez tengáis Git instalado y hayáis reiniciado Visual Studio Code podréis manejar Git desde el propio editor, sin embargo antes debemos configurar un email y un nombre de usuario en Git, eso lo podemos haciendo **clic derecho en la carpeta de nuestro proyecto** y **Git Bash Here**.
 
-En la nueva terminal de Git configuraremos sólo una vez, luego ya se quedará guardado, nuestra información de autor:
+En la nueva terminal de Git vamos a configurar sólo una primera vez nuestra información de autoría:
 
 ```bash
 git config --global user.email "hcostaguzman@gmail.com"
 git config --global user.name "Héctor Costa"
 ```
 
-Acto seguido iniciaremos el repositorio escribiendo lo siguiente mientras estamos en el directorio del proyecto:
+Acto seguido iniciaremos el repositorio escribiendo lo siguiente estando en el directorio del proyecto:
 
 ```bash
 git init
 ```
 
-A partir de ahora nos trasladamos a Visual Studio Code, tendréis que reiniciarlo para que detecte Git y luego ya veréis que en el proyecto se ha activado la tercera opción del menú, es la que maneja el control de código.
+Cuando lo tengamos procederemos a identificarnos en Heroku para crear el proyecto remoto y poder desplegarlo:
 
-Veréis que se añaden tropocientosmil ficheros al repositorio, eso es porque las dependendencias de Node, almacenadas en la carpeta **node_modules** también se han añadido. No queremos eso, vamos a crear un fichero **.gitignore** para decirle que la ignore:
+```bash
+heroku login
+```
+
+Os pedirá abrir el navegador para identificaros en la web, una vez hecho creamos el proyecto en heroku:
+
+```bash
+heroku create
+```
+
+A parte de crearlo se abrá añadido la configuración remota para el despliegue, lo sabréis porque apaecerá una URL y un repositorio de Git almacenado en Heroku.
+
+Con esto ya estamos listos para volver a Visual Studio Code y continuar desde allí, sin embargo **es importante que reiniciéis el editor** para que se detecte Git y podáis usarlo cómodamente.
+
+Al abrir de nuevo el proyecto veréis que se activa la tercera opción para "Controlar código fuente" y se añaden tropocientosmil ficheros al repositorio, eso es porque las dependendencias de Node almacenadas en la carpeta **node_modules** también se han añadido. No queremos eso, vamos a crear un fichero **.gitignore** para decirle que la ignore:
 
 !!! example .gitignore
 ```
@@ -407,7 +405,41 @@ node_modules/
 
 Veréis como el directorio se pone gris, eso es que ya lo está ignorando.
 
-Ahora desde el propio editor, en la parte superior vamos a añadir un mensaje explicando los cambios, esto que se conoce como un hacer un "Commit". Cuando lo tengamos confirmaremos en el botón de arriba.
+Ahora desde el propio editor, en la parte superior vamos a añadir un mensaje explicando los cambios, esto que se conoce como un hacer un "Commit", cuando lo tengamos confirmamos en el botón de arriba.
+
+Finalmente hacemos clic en los tres puntitos y seleccionamos la opción **Publicar en rama**.
+
+Como solo tenemos el la rama maestro en Heroku configurada se publicarán ahí los cambios directamente, si tuviéramos más ramas nos pediría seleccionar una específica.
+
+Podemos intentar acceder a la URL del proyecto y en su puerto 3000 a ver si funciona:
+
+```
+https://salty-citadel-21296.herokuapp.com:3000 
+```
+
+Al publicar estos cambios automáticamente se realizará el despliegue, pero lamentabelmente esto no funcionará a la primera.
+
+Podemos consultar un registro del servidor en la terminal:
+
+```
+heroku logs -a salty-citadel-21296 -n 50
+```
+
+En este caso en particular indagando encontraremos esta línea:
+
+```
+Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch
+```
+
+Básicamente nos dice que falló la asignación al puerto 3000, esto sucede porque Heroku asigna dinámicamente el puerto. Esto me viene de perlas para que veáis como actualizar el repositorio en un momento.
+
+Vamos a cambiar la línea para usar el puerto que maneja el proceso de Heroku internamente:
+
+```javascript
+var server = http.listen(process.env.PORT || 3000, () => {
+  console.log("Servidor listo en http://127.0.0.1:" + server.address().port);
+});
+```
 
 
 
