@@ -380,11 +380,24 @@ web: node server.js
 
 El siguiente requisito es que el proyecto esté gestionado con el control de versiones Git, así que no tenemos remedio que instalar ese programa, os dejaré el ![enlace en los apuntes](https://git-scm.com/downloads). Podéis hacer siguiente, siguiente, siguiente sin mucha complicación.
 
-Una vez tengáis Git instalado y hayáis reiniciado Visual Studio Code podréis manejar Git desde el propio editor.
+Una vez tengáis Git instalado y hayáis reiniciado Visual Studio Code podréis manejar Git desde el propio editor, sin embargo antes debemos configurar un email y un nombre de usuario en Git, eso lo podemos haciendo clic derecho en la carpeta de nuestro proyecto y "Git Bash Here".
 
-Id a la pestaña de **Control de código fuente** y haced clic en el botón de la esquina superior para "Iniciar el repositorio".
+En la nueva terminal de Git configuraremos sólo una vez, luego ya se quedará guardado, nuestra información de autor:
 
-Ahora veréis que se añaden tropocientosmil ficheros al repositorio, eso es porque las dependendencias de Node, almacenadas en la carpeta **node_modules** también se han añadido. No queremos eso, vamos a crear un fichero **.gitignore** para decirle que ignore:
+```bash
+git config --global user.email "hcostaguzman@gmail.com"
+git config --global user.name "Héctor Costa"
+```
+
+Acto seguido iniciaremos el repositorio escribiendo lo siguiente mientras estamos en el directorio del proyecto:
+
+```bash
+git init
+```
+
+A partir de ahora nos trasladamos a Visual Studio Code, tendréis que reiniciarlo para que detecte Git y luego ya veréis que en el proyecto se ha activado la tercera opción del menú, es la que maneja el control de código.
+
+Veréis que se añaden tropocientosmil ficheros al repositorio, eso es porque las dependendencias de Node, almacenadas en la carpeta **node_modules** también se han añadido. No queremos eso, vamos a crear un fichero **.gitignore** para decirle que la ignore:
 
 !!! example .gitignore
 ```
@@ -394,9 +407,7 @@ node_modules/
 
 Veréis como el directorio se pone gris, eso es que ya lo está ignorando.
 
-Vamos a añadir un mensaje para añadir los cambios, lo que se conoce como un hacer un "Commit" y paso seguido presionaremos el botón de confirmar.
-
-
+Ahora desde el propio editor, en la parte superior vamos a añadir un mensaje explicando los cambios, esto que se conoce como un hacer un "Commit". Cuando lo tengamos confirmaremos en el botón de arriba.
 
 
 
