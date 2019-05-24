@@ -14,8 +14,8 @@ io.on('connection', (socket) => {
   });
 })
 
-var server = http.listen(process.env.PORT || 3000, () => {
-  console.log("Servidor listo en http://127.0.0.1:" + server.address().port);
+var server = http.listen(5000, () => {
+  console.log("Servidor listo en http://127.0.0.1:5000");
 });
 
 

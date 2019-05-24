@@ -431,15 +431,20 @@ En este caso en particular indagando encontraremos esta línea:
 Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch
 ```
 
-Básicamente nos dice que falló la asignación al puerto 3000, esto sucede porque Heroku asigna dinámicamente el puerto. Esto me viene de perlas para que veáis como actualizar el repositorio en un momento.
+Básicamente nos dice que falló la asignación al puerto 3000, os recomiendo usar el puerto 5000, ese a mi me suele funcionar:
 
 Vamos a cambiar la línea para usar el puerto que maneja el proceso de Heroku internamente:
 
 ```javascript
-var server = http.listen(process.env.PORT || 3000, () => {
-  console.log("Servidor listo en http://127.0.0.1:" + server.address().port);
+var server = http.listen(5000, () => {
+  console.log("Servidor listo en http://127.0.0.1:5000");
 });
 ```
+
+Hacemos un commit, confirmamos y publicamos los cambios. En esta ocasión lo haremos desde la terminal de git para que veáis lo que muestra durante el despliegue:
+
+
+
 
 
 
