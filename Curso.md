@@ -431,17 +431,25 @@ En este caso en particular indagando encontraremos esta línea:
 Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch
 ```
 
-Básicamente nos dice que falló la asignación al puerto 3000, ¿sabéis poqué? Cuando hemos definido el **Procfile** hemos indicado que el servicio tiene el tipo web, eso le dice a Heroku que este proceso debe ejecutarse en el puerto 80.
+Básicamente nos dice que falló la asignación al puerto 3000, ¿sabéis poqué? Cuando hemos definido el **Procfile** hemos indicado que el servicio tiene el tipo **web**, eso le dice a Heroku que este proceso debe ejecutarse en el puerto 80, pero antes de que lo hagáis, no cambieis el puerto al 80 porque no es así como funciona. 
 
-Vamos a cambiar la línea para usar el puerto que maneja el proceso de Heroku internamente:
+Heroku internamente asignará un puerto dinámico a la aplicación y lo mapeará al puerto 80 del servidor. Ese puerto dinámico lo tendremos que recuperar del proceso, así que podemos hacer esto:
 
 ```javascript
-var server = http.listen(80, () => {
-  console.log("Servidor listo en http://127.0.0.1:5000");
+// Asignar el puerto que Heroku maneja y si no existe el 3000 manualmente
+var server = http.listen(process.env.PORT || 3000, () => {
+  console.log("Servidor listo en http://127.0.0.1:" + server.address().port);
 });
 ```
 
-Hacemos un commit, confirmamos y publicamos los cambios. En esta ocasión lo haremos desde la terminal de git para que veáis lo que muestra durante el despliegue:
+Ahora hacemos un commit, confirmamos y publicamos los cambios, si todo ha ido bien deberíamos ser capaces de acceder desde la URL normal, que mapea el puerto 80 automáticamente, a nuestro chat web:
+
+```
+https://salty-citadel-21296.herokuapp.com
+```
+
+
+
 
 
 

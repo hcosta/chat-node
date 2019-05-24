@@ -14,8 +14,9 @@ io.on('connection', (socket) => {
   });
 })
 
-var server = http.listen(80, () => {
-  console.log("Servidor listo en http://127.0.0.1");
+// Asignar el puerto que Heroku maneja y si no existe el 3000 manualmente
+var server = http.listen(process.env.PORT || 3000, () => {
+  console.log("Servidor listo en http://127.0.0.1:" + server.address().port);
 });
 
 
